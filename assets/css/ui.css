@@ -1,0 +1,39 @@
+.margin-lt-4 {
+    margin-left: 4px;
+}
+.display-block {
+    display: block;
+}
+.close {
+    display: none;
+}
+.open {
+    display: block;
+}
+.list {
+    margin-bottom: 10px;
+}
+.btn {
+    display: inline-block;
+    padding: 2px 6px;
+    border: solid 1px black;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.btn:hover, .bt:focus {
+    background: #ececec;
+}
+
+input[type="text"] {
+    margin-top: 10px;
+    height: 20px;
+}
+.user {
+    width: 300px;
+    border-right: 1px solid #d4d4d4;
+    float: left;
+}
+.user-form {
+    padding: 0 16px;
+    overflow: hidden;
+}
