@@ -21,7 +21,6 @@ class User extends React.Component {
                 <ul>
                     {this.props.users.list.map((user) => {
                         let {id, name, active=''} = user;
-                        console.log(active);
                         return (
                             <li className={`list ${active}`} key={id} data-id={id}>{name}
                                 <span onClick={this.getUser.bind(this)} className="btn margin-lt-4">load</span>
