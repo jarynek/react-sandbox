@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import Form from './services/Form';
+import Xhr from './services/xhr';
 import User from './components/User';
 
 import './../../assets/css/ui.css';
@@ -21,8 +21,6 @@ class HomepageController extends React.Component {
             },
             basket: options.basket
         };
-
-        new Form('form');
     }
 
     render() {

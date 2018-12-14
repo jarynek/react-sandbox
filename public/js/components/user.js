@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import UserForm from "./forms/user";
+import Xhr from "../services/xhr";
 
+/**
+ * User react component
+ */
 class User extends React.Component {
 
     constructor(props) {
@@ -9,72 +13,162 @@ class User extends React.Component {
 
         this.state = {
             active: '',
-            edit:{
-                name:''
-            }
+            edit: {
+                id: null,
+                username: '',
+                name: '',
+                email: '',
+                phone: ''
+            },
+            searchUser: ''
         };
+
+        this.xhr = new Xhr(this.props.users.list);
     }
 
+    /**
+     * _renderSearchInput
+     * @returns {*}
+     * @private
+     */
+    _renderSearchInput(){
+        return(
+            <div className="search">
+                <label htmlFor="search" className="display-block">
+                    <input placeholder="Search user" onChange={this.searchUser.bind(this)} type="text" name="searchUser" defaultValue={this.state.searchUser}/>
+                </label>
+            </div>
+        )
+    }
+
+    /**
+     * _renderBtn
+     * @param active
+     * @returns {*}
+     * @private
+     */
+    _renderBtn(active) {
+        if (active) {
+            return (
+                <span onClick={this.saveUser.bind(this)} className="btn primary margin-lt-4">Save</span>
+            )
+        } else {
+            return (
+                <span onClick={this.setUser.bind(this)} className="btn margin-lt-4">Edit</span>
+            )
+        }
+    }
+
+    /**
+     * render
+     * @returns {*}
+     */
     render() {
         return (
             <div>
-                <ul>
-                    {this.props.users.list.map((user) => {
-                        let {id, name, active=''} = user;
-                        return (
-                            <li className={`list ${active}`} key={id} data-id={id}>{name}
-                                <span onClick={this.getUser.bind(this)} className="btn margin-lt-4">load</span>
-                            </li>
-                        )
-                    })}
-                </ul>
+                {this._renderSearchInput()}
+                <div className="user-list">
+                    <ul className="format">
+                        {this.props.users.list.map((user) => {
+                            let {id, username, name, email, phone, active = '', hidden=''} = user;
+                            return (
+                                <li className={`list position-relative ${active} ${hidden}`} key={id} data-id={id}>
+                                    <span className="display-block">{username} {name}</span>
+                                    <span className="display-block">{email}</span>
+                                    <span className="display-block">{phone}</span>
+                                    {this._renderBtn(active)}
+                                </li>
+                            )
+                        })}
+                    </ul>
 
-                {ReactDom.createPortal(<UserForm
-                    setName={this.setNameTest.bind(this)}
-                    edit={this.state.edit}/>, document.getElementById('user-form'))}
+                    {ReactDom.createPortal(<UserForm
+                        editUser={this.editUser.bind(this)}
+                        edit={this.state.edit}/>, document.getElementById('user-form'))}
+                </div>
             </div>
         )
+    }
+
+    componentWillMount() {
+        console.log('componentWillMount');
+    }
+
+    /**
+     *
+     * @param {object} el
+     * @returns {*}
+     * @private
+     */
+    static _getUserId(el) {
+        if (!el) {
+            throw 'el is not forward';
+        }
+        return parseInt(el.dataset.id);
+    }
+
+    /**
+     * searchUser
+     * @param {object} el
+     */
+    searchUser(el){
+        let search = this.props.users.list.filter((user)=>{
+            user.hidden = '';
+            if(user.name.indexOf(el.target.value) === -1 && user.username.indexOf(el.target.value) === -1){
+                user.hidden = 'hidden';
+            }
+        });
+
+        this.setState({list: search});
     }
 
     /**
      * user param el
      * @param {object} el
      */
-    getUser(el){
+    setUser(el) {
+        try {
 
-        let id = parseInt(el.target.parentNode.dataset.id);
-        let edit = this.props.users.list.filter(user => user.id === id)[0];
-        let active = this.state.active === '' ? 'active' : '';
+            let edit = this.props.users.list.filter(user => user.id === User._getUserId(el.target.parentNode))[0];
+            let actives = this.props.users.list.filter(user => user.active === 'active')[0];
+            let active = this.state.active = 'active';
 
-        edit.active = active;
+            if (actives) {
+                actives.active = '';
+            }
+            edit.active = active;
 
-        this.setState({active: active});
-        this.setState({edit: edit});
-    }
+            this.setState({edit: edit});
 
-    /**
-     * Edit name
-     * @param {object} el
-     */
-    setName(el) {
-        let id = parseInt(el.target.parentNode.dataset.id);
-        let object = this.props.users.list.filter(user => user.id === id)[0];
-        object.name = el.target.value;
-
-        this.setState({object: this});
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**
      * set Name
      * @param {object} el
      */
-    setNameTest(el){
-        let label = el.target.parentNode;
-        let id = parseInt(label.parentNode.dataset.id);
-        let object = this.props.users.list.filter(user => user.id === id)[0];
-        object.name = el.target.value;
+    editUser(el) {
 
-        this.setState({object: this});
+        try {
+            let label = el.target.parentNode;
+            let object = this.props.users.list.filter(user => user.id === User._getUserId(label.parentNode))[0];
+            object[el.target.name] = el.target.value;
+
+            this.setState({object: this});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /**
+     * saveUser
+     * @param {object} el
+     */
+    saveUser(el) {
+        this.xhr.run();
+        alert(`${this.state.edit.name} was saved`);
     }
 }
 
