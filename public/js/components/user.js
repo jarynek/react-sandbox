@@ -20,7 +20,8 @@ class User extends React.Component {
                 email: '',
                 phone: ''
             },
-            searchUser: ''
+            searchUser: '',
+            searchInit: '',
         };
 
         this.xhr = new Xhr(this.props.users.list);
@@ -31,12 +32,14 @@ class User extends React.Component {
      * @returns {*}
      * @private
      */
-    _renderSearchInput(){
-        return(
-            <div className="search">
+    _renderSearchInput() {
+        return (
+            <div className={`search ${this.state.searchInit}`}>
                 <label htmlFor="search" className="display-block">
-                    <input placeholder="Search user" onChange={this.searchUser.bind(this)} type="text" name="searchUser" defaultValue={this.state.searchUser}/>
+                    <input placeholder="Search user" onChange={this._searchUser.bind(this)} type="text"
+                           name="searchUser" defaultValue={this.state.searchUser}/>
                 </label>
+                <span onClick={this._searchReset.bind(this)} className="btn btn-xs reset">reset</span>
             </div>
         )
     }
@@ -70,7 +73,7 @@ class User extends React.Component {
                 <div className="user-list">
                     <ul className="format">
                         {this.props.users.list.map((user) => {
-                            let {id, username, name, email, phone, active = '', hidden=''} = user;
+                            let {id, username, name, email, phone, active = '', hidden = ''} = user;
                             return (
                                 <li className={`list position-relative ${active} ${hidden}`} key={id} data-id={id}>
                                     <span className="display-block">{username} {name}</span>
@@ -111,15 +114,35 @@ class User extends React.Component {
      * searchUser
      * @param {object} el
      */
-    searchUser(el){
-        let search = this.props.users.list.filter((user)=>{
+    _searchUser(el) {
+        let search = this.props.users.list.filter((user) => {
             user.hidden = '';
-            if(user.name.indexOf(el.target.value) === -1 && user.username.indexOf(el.target.value) === -1){
+            if (user.name.indexOf(el.target.value) === -1
+                && user.username.indexOf(el.target.value) === -1) {
                 user.hidden = 'hidden';
             }
         });
 
         this.setState({list: search});
+        this.setState({searchInit: 'search-init'});
+    }
+
+    /**
+     * _searchReset
+     * @param {object} el
+     * @private
+     */
+    _searchReset(el) {
+
+        const node = ReactDom.findDOMNode(this);
+        let input = node.querySelector('.search').childNodes[0].firstChild;
+        input.value = '';
+
+        this.props.users.list.map((user)=>{
+            user.hidden = '';
+        });
+
+        this.setState({list: this});
     }
 
     /**
@@ -168,7 +191,6 @@ class User extends React.Component {
      */
     saveUser(el) {
         this.xhr.run();
-        alert(`${this.state.edit.name} was saved`);
     }
 }
 

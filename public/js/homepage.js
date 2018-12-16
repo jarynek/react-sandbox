@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-
-import Xhr from './services/xhr';
 import User from './components/User';
 
 import './../../assets/css/ui.css';

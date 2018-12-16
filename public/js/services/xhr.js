@@ -4,15 +4,16 @@ class Xhr {
     }
 
     run() {
+        document.body.classList.add('in-progress');
         fetch('https://jsonplaceholder.typicode.com/users', {
-            method: 'POST',
-            body: JSON.stringify({data: this.options})
-        }).then(function (response) {
-            console.log(response.json());
-        }).then(function (myJson) {
-                console.log('json');
+        }).then((response)=>{
+        }).then((data)=>{
+            setTimeout((e)=>{
+                document.body.classList.remove('in-progress');
+            }, 500);
         });
+        console.log('dfsdf');
     }
 }
 
-export default Xhr;
+export default Xhr

@@ -39,6 +39,7 @@ class UserForm extends React.Component {
                                    type="text" name="phone"
                                    value={this.props.edit.phone}/></label>
                     </form>
+                    <div className="spinner">Saving...</div>
                 </div>
             )
         }

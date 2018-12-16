@@ -1,3 +1,11 @@
+
+body {
+  &.in-progress{
+    .spinner {
+      display: block;
+    }
+  }
+}
 .position-relative {
   position: relative;
 }
@@ -19,11 +27,9 @@
 .open {
   display: block;
 }
-
 .active {
   background: #f2f2f3;
 }
-
 .hidden {
   display: none;
 }
@@ -33,9 +39,13 @@
   border: solid 1px black;
   border-radius: 2px;
   cursor: pointer;
+  background: white;
   &.primary {
     background: red;
     color: #fff;
+  }
+  &.btn-xs {
+    padding: 1px 4px;
   }
   &:hover {
     background: #ececec;
@@ -114,8 +124,34 @@ ul{
     }
   }
 }
-
 .search {
   padding: 10px;
   border-bottom: solid 1px #d4d4d4;
+  position: relative;
+  .reset {
+    position: absolute;
+    right: 16px;
+    top: 0;
+    bottom: 0;
+    height: 20px;
+    margin: auto;
+  }
+}
+.spinner{
+  display: none;
+  position: fixed;
+  width: 100px;
+  height: 40px;
+  background: white;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  text-align: center;
+  border-radius: 3px;
+  line-height: 40px;
+  -moz-box-shadow: 0 0 5px #00000042;
+  -webkit-box-shadow: 0 0 5px #00000042;
+  box-shadow: 0 0 5px #00000042;
 }
