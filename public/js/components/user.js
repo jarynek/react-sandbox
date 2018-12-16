@@ -117,8 +117,9 @@ class User extends React.Component {
     _searchUser(el) {
         let search = this.props.users.list.filter((user) => {
             user.hidden = '';
-            if (user.name.indexOf(el.target.value) === -1
-                && user.username.indexOf(el.target.value) === -1) {
+
+            if (user.name.toLowerCase().indexOf(el.target.value.toLowerCase()) === -1
+                && user.username.toLowerCase().indexOf(el.target.value.toLowerCase()) === -1) {
                 user.hidden = 'hidden';
             }
         });
