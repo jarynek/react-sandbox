@@ -12,7 +12,6 @@ class Xhr {
                 document.body.classList.remove('in-progress');
             }, 500);
         });
-        console.log('dfsdf');
     }
 }
 
