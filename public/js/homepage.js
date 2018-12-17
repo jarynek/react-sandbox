@@ -15,7 +15,7 @@ class HomepageController extends React.Component {
         this.state = {
             users: {
                 list: options.users,
-                edit: 'jarek'
+                edit: ''
             },
             basket: options.basket
         };
